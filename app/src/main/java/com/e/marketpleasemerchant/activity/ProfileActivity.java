@@ -2,7 +2,9 @@ package com.e.marketpleasemerchant.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,12 +30,14 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profile_name) TextView profilName;
     @BindView(R.id.profile_email) TextView profilEmail;
     @BindView(R.id.profile_merchant_name) TextView profileMerchantName;
     @BindView(R.id.profile_create_at) TextView profilCreateAt;
+    @BindView(R.id.btn_logout) Button btnLogout;
 
     Register register;
 
@@ -46,6 +50,19 @@ public class ProfileActivity extends AppCompatActivity {
         getDataUser();
 
     }
+
+    @OnClick(R.id.btn_logout)
+    public void logout(){
+        TokenManager.getInstance(getSharedPreferences("pref", MODE_PRIVATE)).deleteToken();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        /*intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
+        HomeActivity.fa.finish();
+        finish();
+
+    }
+
 
     private void getDataUser(){
         String url = " http://210.210.154.65:4444/api/auth/getuser/";
@@ -62,6 +79,11 @@ public class ProfileActivity extends AppCompatActivity {
                             String lastname = user.getString("last_name");
                             String fullname = firstname + " " + lastname;
                             profilName.setText(fullname);
+                            profilEmail.setText(user.getString("email"));
+                            profilCreateAt.setText(user.getString("created_at"));
+
+                            JSONObject merchant = user.getJSONObject("merchant");
+                            profileMerchantName.setText(merchant.getString("merchantName"));
 
 
                         } catch (JSONException e) {

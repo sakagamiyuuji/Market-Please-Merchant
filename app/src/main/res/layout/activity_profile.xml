@@ -1,52 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:gl="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     tools:context=".activity.LoginActivity"
     android:background="@drawable/profil_bg"
     android:orientation="vertical">
 
+    <net.colindodd.gradientlayout.GradientRelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        gl:end_color="@color/gradientOrange"
+        gl:orientation="LEFT_RIGHT"
+        gl:start_color="@color/gradientLightYellow">
 
-    <TextView
-        android:id="@+id/title_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PROFILE"
-        android:fontFamily="@font/australia"
-        android:textSize="50sp"
-        android:textColor="@color/darkTextColor"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/title_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PROFILE"
+            android:fontFamily="@font/transformer"
+            android:textSize="50sp"
+            android:textColor="#0423bd"
+            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp" />
 
-    <TextView
-        android:id="@+id/profile_name"
+    </net.colindodd.gradientlayout.GradientRelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/zen"
+        android:layout_below="@id/header_layout"
+        android:layout_marginTop="-65dp"
+        android:layout_marginLeft="15dp"/>
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/header_layout"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:id="@+id/tt_profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NAMA"
+            android:layout_marginTop="10dp"
+            style="@style/profil" />
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tt_profile_name"
+            style="@style/profilvalue" />
+
+        <TextView
+            android:id="@+id/tt_profile_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EMAIL"
+            android:layout_below="@+id/profile_name"
+            style="@style/profil"/>
+
+        <TextView
+            android:id="@+id/profile_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tt_profile_email"
+            style="@style/profilvalue"/>
+
+        <TextView
+            android:id="@+id/tt_profile_create_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CREATE AT"
+            android:layout_below="@+id/profile_email"
+            style="@style/profil"/>
+
+        <TextView
+            android:id="@+id/profile_create_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tt_profile_create_at"
+            style="@style/profilvalue"/>
+
+        <TextView
+            android:id="@+id/tt_profile_merchant_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MERCHANT NAME"
+            android:layout_below="@id/profile_create_at"
+            style="@style/profil"/>
+
+        <TextView
+            android:id="@+id/profile_merchant_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tt_profile_merchant_name"
+            style="@style/profilvalue"/>
+
+
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="NAMA"/>
-
-    <TextView
-        android:id="@+id/profile_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="EMAIL"/>
-
-    <TextView
-        android:id="@+id/profile_merchant_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="NAMA"/>
-
-    <TextView
-        android:id="@+id/profile_create_at"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CREATE AT"/>
+        android:text="LOGOUT"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="200dp"/>
 
 
 
-</LinearLayout>
+</RelativeLayout>

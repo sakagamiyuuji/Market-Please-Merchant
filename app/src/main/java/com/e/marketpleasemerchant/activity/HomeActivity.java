@@ -1,17 +1,33 @@
 package com.e.marketpleasemerchant.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.e.marketpleasemerchant.R;
+import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.fragment.ListProductFragment;
+import com.e.marketpleasemerchant.model.AccessToken;
+import com.e.marketpleasemerchant.utils.TokenManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Hashtable;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -19,20 +35,31 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView botNav;
     private CircleImageView circleAccount;
-    private TextView headUserName;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Fragment fragment = new ListProductFragment();
-        loadFragment(fragment);
+        fa = this;
+
+        Bundle bundle = getIntent().getExtras();
+        String merchant = bundle.getString("merchant");
+
+        Bundle data = new Bundle();
+        data.putString("merchantname", merchant);
+        ListProductFragment listProductFragment = new ListProductFragment();
+        //ListProductFragment listProductFragment = ListProductFragment.newInstance(getApplicationContext());
+        listProductFragment.setArguments(data);
+        loadFragment(listProductFragment);
 
         botNav = findViewById(R.id.bot_nav);
         botNav.setOnNavigationItemSelectedListener(this);
 
     }
+
+    public static Activity fa;
 
     private boolean loadFragment(Fragment fragment){
         if(fragment != null){
@@ -59,6 +86,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         return loadFragment(fragment);
     }
+
+
 
     /*RecyclerView recyclerView, rvCategory;
     CardView cvAllProduct;

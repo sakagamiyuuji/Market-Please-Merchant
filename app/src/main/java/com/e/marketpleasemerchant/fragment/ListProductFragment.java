@@ -1,8 +1,10 @@
 package com.e.marketpleasemerchant.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,18 +19,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.e.marketpleasemerchant.R;
 import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.activity.AddProductActivity;
 import com.e.marketpleasemerchant.activity.ProfileActivity;
+import com.e.marketpleasemerchant.activity.SplashScreenActivity;
 import com.e.marketpleasemerchant.adapter.AllProductAdapter;
 import com.e.marketpleasemerchant.adapter.CategoryListAdapter;
+import com.e.marketpleasemerchant.model.AccessToken;
 import com.e.marketpleasemerchant.model.Category;
 import com.e.marketpleasemerchant.model.Product;
+import com.e.marketpleasemerchant.utils.TokenManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -37,6 +44,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,10 +62,11 @@ public class ListProductFragment extends Fragment {
     private CategoryListAdapter adapterCat = new CategoryListAdapter(getActivity());
     private static Context context;
     private CircleImageView circleAccount;
-    private TextView headUserName;
+    public static TextView headUserName;
 
 
-    String url = "http://210.210.154.65:4444/api/products";
+    //String url = "http://210.210.154.65:4444/api/products";
+    String url = "http://210.210.154.65:4444/api/merchant/products";
     String urlCat = "http://210.210.154.65:4444/api/categories";
 
     public static ListProductFragment newInstance(Context contexts){
@@ -64,6 +74,7 @@ public class ListProductFragment extends Fragment {
         context = contexts;
         return listProductFragment;
     }
+
 
     public ListProductFragment() {
         // Required empty public constructor
@@ -83,6 +94,25 @@ public class ListProductFragment extends Fragment {
         circleAccount = root.findViewById(R.id.accountprofile);
         headUserName = root.findViewById(R.id.head_username);
 
+        String merchantName = getArguments().getString("merchantname");
+        //Toast.makeText(context, merchantName, Toast.LENGTH_SHORT).show();
+        headUserName.setText("Welcome "+merchantName);
+
+        /*try {
+            String merchantName = getArguments().getString("merchant");
+            if (merchantName != null){
+                headUserName.setText("Welcome "+merchantName);
+            }
+            else {
+                Toast.makeText(context, "NAMA KOSONG", Toast.LENGTH_SHORT).show();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+
         circleAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +120,6 @@ public class ListProductFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
 
         fabClick();
 
@@ -122,6 +151,7 @@ public class ListProductFragment extends Fragment {
 
     public void volleyEffect(){
 
+        AccessToken accessToken = TokenManager.getInstance(this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)).getToken();
         JsonObjectRequest listProductReq = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -151,7 +181,16 @@ public class ListProductFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         //Log.e("VOLLEY NYA ERROR BANG", error.getMessage());
                     }
-                });
+                }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new Hashtable<>();
+                headers.put("Accept", "application/json");
+                headers.put("Authorization", accessToken.getTokenType() +" "+ accessToken.getAccessToken());
+                return headers;
+            }
+        };
 
         VolleyApp.getInstance().addToRequestQueue(listProductReq, "listProductReq");
     }

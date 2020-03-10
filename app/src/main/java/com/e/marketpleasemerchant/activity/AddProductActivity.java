@@ -33,7 +33,9 @@ import com.e.marketpleasemerchant.error.ProductErrorResponse;
 import com.e.marketpleasemerchant.R;
 import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.adapter.CategorySpinnerAdapter;
+import com.e.marketpleasemerchant.model.AccessToken;
 import com.e.marketpleasemerchant.model.Category;
+import com.e.marketpleasemerchant.utils.TokenManager;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -42,7 +44,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -213,7 +217,9 @@ public class AddProductActivity extends AppCompatActivity implements AdapterView
     }
 
     private void postProductToServer() {
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://210.210.154.65:4444/api/products",
+        AccessToken accessToken = TokenManager.getInstance(getSharedPreferences("pref", MODE_PRIVATE)).getToken();
+        String accesTok = accessToken.getAccessToken();
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://210.210.154.65:4444/api/merchant/products",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -261,6 +267,14 @@ public class AddProductActivity extends AppCompatActivity implements AdapterView
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
+
+                        try {
+                            String body = new String(error.networkResponse.data, "UTF-8");
+                            Toast.makeText(AddProductActivity.this, body, Toast.LENGTH_SHORT).show();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
                         if(error.networkResponse.statusCode == 400){
                             Toast.makeText(getApplicationContext(), String.valueOf(error.networkResponse), Toast.LENGTH_LONG).show();
                         }
@@ -282,8 +296,16 @@ public class AddProductActivity extends AppCompatActivity implements AdapterView
 
                 params.put("productPrice", productPrice);
                 params.put("categoryId", categoryId);
-                params.put("merchantId", merchantId);
+                //params.put("merchantId", merchantId);
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new Hashtable<>();
+                headers.put("Accept", "application/json");
+                headers.put("Authorization", accessToken.getTokenType() +" "+ accesTok);
+                return headers;
             }
         };
         {

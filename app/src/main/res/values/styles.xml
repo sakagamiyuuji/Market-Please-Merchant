@@ -8,6 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="profil">
+        <item name="android:textColor">@color/darkTextColor</item>
+        <item name="android:fontFamily"> @font/letter</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="profilvalue">
+        <item name="android:textColor">@color/darkTextColor</item>
+        <item name="android:fontFamily"> @font/letter</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+
+    </style>
+
+    <style name="Progress">
+        <item name="colorAccent">#ffffff</item>
+    </style>
+
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorControlNormal">#d32f2f</item>
         <item name="colorControlActivated">#ff5722</item>
