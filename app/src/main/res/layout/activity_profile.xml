@@ -35,12 +35,48 @@
     </net.colindodd.gradientlayout.GradientRelativeLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_photo"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:src="@drawable/zen"
         android:layout_below="@id/header_layout"
         android:layout_marginTop="-65dp"
         android:layout_marginLeft="15dp"/>
+
+    <RelativeLayout
+        android:layout_width="110dp"
+        android:layout_height="330dp"
+        android:layout_below="@id/profile_photo"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/wrap_white_transparant"
+        android:outlineSpotShadowColor="@color/darkTextColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_total_product"
+                android:textSize="40sp"
+                android:text="0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/tt_total_product"
+                android:textSize="20sp"
+                android:text="POST"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="220dp"

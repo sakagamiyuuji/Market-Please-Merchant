@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,14 +24,18 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.e.marketpleasemerchant.R;
 import com.e.marketpleasemerchant.VolleyApp;
+import com.e.marketpleasemerchant.model.AccessToken;
 import com.e.marketpleasemerchant.model.Product;
+import com.e.marketpleasemerchant.utils.TokenManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
+import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
 
 public class ProductDeskripsiActivity extends AppCompatActivity {
 
@@ -161,7 +166,10 @@ public class ProductDeskripsiActivity extends AppCompatActivity {
     }
 
     public void deleteProduct(){
-        String url = "http://210.210.154.65:4444/api/product/"+ product.getProductId()+"/delete";
+        AccessToken accessToken = TokenManager.getInstance(getSharedPreferences("pref", MODE_PRIVATE)).getToken();
+        String accessTok = accessToken.getAccessToken();
+        String bearer = accessToken.getTokenType();
+        String url = "http://210.210.154.65:4444/api/merchant/product/"+ product.getProductId()+"/delete";
         Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
 
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, url, null,
@@ -178,7 +186,16 @@ public class ProductDeskripsiActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(ProductDeskripsiActivity.this, "DATA GAGAL DI HAPUS", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new Hashtable<>();
+                headers.put("Accept", "application/json");
+                headers.put("Authorization", bearer + " " + accessTok);
+                return headers;
+            }
+        };
         VolleyApp.getInstance().addToRequestQueue(req, "delete_product");
     }
 }

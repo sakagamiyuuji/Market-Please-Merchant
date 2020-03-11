@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.marketpleasemerchant.ConnectionReceiver;
 import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.model.AccessToken;
 import com.e.marketpleasemerchant.utils.TokenManager;
@@ -41,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText edtEmail, edtPassword;
     String email, password;
     AccessToken accessToken;
-
-
+    ConnectionReceiver connectionReceiver;
+    IntentFilter intentFilter;
     private TextView signUp;
 
     @Override
@@ -50,12 +52,29 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        connectionReceiver = new ConnectionReceiver();
+        registerReceiver(connectionReceiver,intentFilter);
+
         initialComponent();
-        conectivityCheck();
+        //conectivityCheck();
         loginClick();
         signUpClick();
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    public void broadcastIntent(View view){
+        Intent intent = new Intent();
+        intent.setAction("android.net.conn.CONNECTIVITY_CHANGE");
+        sendBroadcast(intent);
     }
 
     public void conectivityCheck(){
@@ -75,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         cvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);{
                     if (connectivityManager.getActiveNetworkInfo() != null
                             && connectivityManager.getActiveNetworkInfo().isAvailable()

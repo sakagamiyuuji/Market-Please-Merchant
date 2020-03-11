@@ -33,8 +33,10 @@ import com.e.marketpleasemerchant.error.ProductErrorResponse;
 import com.e.marketpleasemerchant.R;
 import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.adapter.CategorySpinnerAdapter;
+import com.e.marketpleasemerchant.model.AccessToken;
 import com.e.marketpleasemerchant.model.Category;
 import com.e.marketpleasemerchant.model.Product;
+import com.e.marketpleasemerchant.utils.TokenManager;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -265,7 +267,10 @@ public class EditActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void postProductToServer() {
-        final StringRequest stringRequest = new StringRequest(Request.Method.PUT, "http://210.210.154.65:4444/api/product/"+product.getProductId()+"/update",
+
+        AccessToken accessToken = TokenManager.getInstance(getSharedPreferences("pref", MODE_PRIVATE)).getToken();
+        String accessTok = accessToken.getAccessToken();
+        final StringRequest stringRequest = new StringRequest(Request.Method.PUT, "http://210.210.154.65:4444/api/merchant/product/"+product.getProductId()+"/update",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -324,6 +329,8 @@ public class EditActivity extends AppCompatActivity implements AdapterView.OnIte
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new Hashtable<>();
                 params.put("Content-type","application/x-www-form-urlencoded");
+                params.put("Accept", "application/json");
+                params.put("Authorization", accessToken.getTokenType() + " " + accessTok);
                 return params;
             }
 
@@ -342,7 +349,6 @@ public class EditActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 params.put("productPrice", productPrice);
                 params.put("categoryId", categoryId);
-                params.put("merchantId", merchantId);
                 return params;
 
 

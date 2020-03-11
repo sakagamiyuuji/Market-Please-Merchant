@@ -1,6 +1,7 @@
 package com.e.marketpleasemerchant.activity;
 
 import android.app.Activity;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.e.marketpleasemerchant.ConnectionReceiver;
 import com.e.marketpleasemerchant.R;
 import com.e.marketpleasemerchant.VolleyApp;
 import com.e.marketpleasemerchant.fragment.ListProductFragment;
@@ -35,12 +37,18 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView botNav;
     private CircleImageView circleAccount;
-
+    ConnectionReceiver connectionReceiver;
+    IntentFilter intentFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        connectionReceiver = new ConnectionReceiver();
+        registerReceiver(connectionReceiver,intentFilter);
+
 
         fa = this;
 
@@ -59,6 +67,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public static Activity fa;
 
     private boolean loadFragment(Fragment fragment){
@@ -73,14 +86,23 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Bundle bundle = getIntent().getExtras();
+        String merchant = bundle.getString("merchant");
+
         Fragment fragment = null;
+        Bundle data = new Bundle();
+        data.putString("merchantname", merchant);
         switch (menuItem.getItemId()){
             case R.id.home_menu:
                 fragment = new ListProductFragment();
+                fragment.setArguments(data);
+                loadFragment(fragment);
                 break;
 
             case R.id.other_menu:
                 fragment = new ListProductFragment();
+                fragment.setArguments(data);
+                loadFragment(fragment);
                 break;
         }
 
